@@ -1,1 +1,4 @@
- 
+In the reading material, it introduces two kinds of missing values:Explicitly(i.e. flagged with NA) and Implicitly(i.e. simply not present in the data).
+What's more, it uses a clever way to explain the difference between those two misiing values:An explicit missing value is the presence of an absence; an implicit missing value is the absence of a presence.
+Also, it provides some important tool for making missing values explicit in tidy data, such as complete().Complete() takes a set of columns, and finds all unique combinations. It then ensures the original dataset contains all those values, filling in explicit NAs where necessary.
+For the another one, we can fill in those missing values with fill(). It takes a set of columns where you want missing values to be replaced by the most recent non-missing value (sometimes called last observation carried forward).
