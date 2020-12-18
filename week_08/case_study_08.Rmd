@@ -1,7 +1,50 @@
 ---
-title: "Case Study 08"
-author: Your Name
-date: August 1, 2020
-output: github_document
+title: "Carbon Dioxide Concentrations at Mona Loa Observatory"
+author: "Weishan Bai"
+date: "10/27/2020"
+output:
+  html_document: default
+  word_document: default
+  powerpoint_presentation: default
+  github_document: default
 ---
- 
+
+```{r package&data,include=FALSE}
+# need tinytex::install_tinytex()
+library(tidyverse)
+library(dplyr)
+library(rmarkdown)
+library(kableExtra)
+library(webshot)
+library(magick)
+
+# read data
+url= "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_annmean_mlo.txt"
+table<-read_table(url,skip =56)
+```
+
+# Annual Mean Carbon Dioxide Concentrations 1959-Present
+```{r plot, echo=F, eval=T, message=F}
+
+table%>%ggplot(aes(x=year,y=mean))+
+  geom_line(size=0.8)+
+  geom_point(size=1.5,color='red')+
+  labs( x ='Year' , y = 'CO2 levels(ppm)')+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+# Top Five Annual Mean Carbon Dioxide Concentrations at Mona Loa
+```{r table, echo=F, eval=T, message=F}
+
+# make table
+table%>%arrange(desc(mean))%>%
+  slice(1:5)%>%
+  select(year,mean)%>%knitr::kable()%>% kable_styling(bootstrap_options = "striped")%>%as_image(width = 10,file = "table.png")
+  
+```
+
+
+
+
+                            
+                            

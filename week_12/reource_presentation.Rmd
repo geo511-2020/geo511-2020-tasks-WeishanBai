@@ -1,0 +1,70 @@
+---
+title: "Resource Presentation"
+author: Weishan Bai
+date: Nov 20, 2020
+output:
+  powerpoint_presentation: default
+  github_document: default
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library(leaflet)
+```
+#You can simply show a map and set the marks.
+```{r package&data}
+m <- leaflet()
+m <- addTiles(m)
+m <- addMarkers(m, lng=174.768, lat=-36.852, popup="The birthplace of R")
+m
+
+```
+#Both leaflet() and the map layer functions have an optional data parameter that is designed to receive spatial data in one of several forms
+## for example, it can show the data from 'maps' packages
+```{r package&data}
+library(maps)
+mapStates = map("state", fill = TRUE, plot = FALSE)
+leaflet(data = mapStates) %>% addTiles() %>%
+  addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE)
+
+
+```
+# add some circles to a map
+```{r package&data}
+# add some circles to a map
+df = data.frame(Lat = 1:10, Long = rnorm(10))
+k<-leaflet(df) %>% addCircles()
+k
+```
+
+```{r package&data}
+k %>% addProviderTiles(providers$Stamen.Toner)
+```
+
+```{r package&data}
+outline <- quakes[chull(quakes$long, quakes$lat),]
+
+map <- leaflet(quakes) %>%
+  # Base groups
+  addTiles(group = "OSM (default)") %>%
+  addProviderTiles(providers$Stamen.Toner, group = "Toner") %>%
+  addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+  # Overlay groups
+  addCircles(~long, ~lat, ~10^mag/5, stroke = F, group = "Quakes") %>%
+  addPolygons(data = outline, lng = ~long, lat = ~lat,
+    fill = F, weight = 2, color = "#FFFFCC", group = "Outline") %>% 
+  # Layers control
+  addLayersControl(
+    baseGroups = c("OSM (default)", "Toner", "Toner Lite"),
+    overlayGroups = c("Quakes", "Outline"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+map
+```
+
+```{r package&data}
+l <- leaflet() %>% setView(0,0,3)
+
+map %>%
+  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+  addMiniMap()
+```

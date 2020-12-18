@@ -1,7 +1,55 @@
 ---
 title: "Case Study 09"
-author: Your Name
-date: August 1, 2020
+author: Weishan Bai
+date: 11/01/2020
 output: github_document
+always_allow_html: true
+
 ---
- 
+
+```{r package&data,echo=F, eval=T, message=F}
+library(sf)
+library(tidyverse)
+library(ggmap)
+library(rnoaa)
+library(spData)
+library(dplyr)
+library(kableExtra)
+data(world)
+data(us_states)
+
+```
+# read data
+```{r}
+dataurl="https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r00/access/shapefile/IBTrACS.NA.list.v04r00.points.zip"
+tdir=tempdir()
+download.file(dataurl,destfile=file.path(tdir,"temp.zip"))
+unzip(file.path(tdir,"temp.zip"),exdir = tdir)
+list.files(tdir)
+storm_data <- read_sf(list.files(tdir,pattern=".shp",full.names = T))
+```
+# Wrangle the data
+```{r}
+data_na<-storm_data %>% filter(BASIN == "NA")
+storm<-data_na%>%filter(SEASON>=1950)%>%mutate_if(is.numeric, function(x) ifelse(x==-999.0,NA,x)) %>%
+  mutate(decade=(floor(year/10)*10))
+region<-storm%>%st_bbox()
+
+```
+# Make the first plot
+```{r,echo=F, eval=T, message=F}
+p<-ggplot(world) + geom_sf() + facet_wrap(~decade) +
+  stat_bin2d(data=storm, aes(y=st_coordinates(storm)[,2], x=st_coordinates(storm)[,1]),bins=100) + scale_fill_distiller(palette="YlOrRd", trans="log", direction=-1, breaks = c(1,10,100,1000)) +
+  coord_sf(ylim=region[c(2,4)], xlim=region[c(1,3)]) + theme(axis.title=element_blank()) +
+  scale_x_continuous(breaks = c(0, -50, -100))
+p
+```
+
+# show the table
+```{r,echo=F, eval=T, message=F}
+us_trans = st_transform(us_states, crs = st_crs(storm))
+rename_us = us_trans%>%select(state=NAME)
+storm_states <- st_join(storm, rename_us, join = st_intersects,left = F)
+by_state<-storm_states%>%group_by(state)%>%summarize(storm1=length(unique(NAME)))%>%arrange(desc(storm1))%>%slice(1:5)%>%st_drop_geometry()%>%knitr::kable()%>% kable_styling(bootstrap_options = "striped")
+by_state
+```
