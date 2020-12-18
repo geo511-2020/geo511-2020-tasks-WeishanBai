@@ -1,1 +1,2 @@
- 
+ In this week, the most important and useful thing that I learned is
+ that when we use both of raster and dplyr package, we need to notice that they have same function called select(). If we want to use this function to a "sf" type data, it may generate an error. In order to deal with this error, we need to use dplyr::select() instead select().
