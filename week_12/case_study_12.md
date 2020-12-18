@@ -1,17 +1,10 @@
-Resource Presentation
+Case Study 12
 ================
 Weishan Bai
-Nov 20, 2020
+11/26/2020
 
-``` r
-library(leaflet)
-```
+# Download data
 
-``` r
-m <- leaflet()
-m <- addTiles(m)
-m <- addMarkers(m, lng=174.768, lat=-36.852, popup="The birthplace of R")
-m
-```
+# Plot
 
-![](case_study_12_files/figure-gfm/package&data-1.png)<!-- -->
+![](case_study_12_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->

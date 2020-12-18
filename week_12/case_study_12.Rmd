@@ -1,18 +1,41 @@
 ---
-title: "Resource Presentation"
+title: "Case Study 12"
 author: Weishan Bai
-date: Nov 20, 2020
+date: 11/26/2020
 output: github_document
 ---
-
-```{r setup, message=FALSE, warning=FALSE}
-library(leaflet)
+```{r, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggmap)
+library(htmlwidgets)
+library(webshot)
+library(widgetframe)
+library(tidyverse)
+library(rnoaa)
+library(xts)
+library(dygraphs)
 ```
 
-```{r package&data, result='hold',eval=TRUE}
-m <- leaflet()
-m <- addTiles(m)
-m <- addMarkers(m, lng=174.768, lat=-36.852, popup="The birthplace of R")
-m
+# Download data
 
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+#download the data 
+d=meteo_tidy_ghcnd("USW00014733",
+                   date_min = "2016-01-01", 
+                   var = c("TMAX"),
+                   keep_flags=T) %>% 
+   mutate(date=as.Date(date),
+          tmax=as.numeric(tmax)/10)
+```
+
+# Plot
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+# plot
+tmax = xts(d$tmax, order.by = d$date)
+p<-dygraph(tmax, main = "Daily Maximum Temperature in Buffalo, NY") %>%
+  dyRangeSelector(dateWindow = c("2020-01-01", "2020-10-31"))
+p
+
+saveWidget(p, "p1.html", selfcontained = F, libdir = "lib")
 ```
