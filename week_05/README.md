@@ -1,1 +1,1 @@
- 
+ In this week, I learn a lot about R, especially in spatial vector data procssing. For example, after we do calculation about the area of spatial data in sf objects, we can sample acquire their units by function:st_area(data). However, if we keep do calculation with this object, the value will change but the unit may not change. To solve this problem, we can set the unit of objects by using function: units::set_units(st_area(data), km^2).

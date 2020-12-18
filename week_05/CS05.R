@@ -22,7 +22,7 @@ NY=us_states%>%
 # intersect ny to buffer to make target area
 intersection=st_intersection(buffer,NY)
 
-pp=us_albers_NY%>%ggplot()+
+pp=NY%>%ggplot()+
   geom_sf()+  # plot NY
   geom_sf(data=intersection,fill='red')+  # plot target area
   ggtitle('New York Land within 10km')+  # set title
