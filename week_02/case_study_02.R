@@ -11,7 +11,6 @@ temp=read_csv(dataurl,
 view(temp)
 summary(temp)
 glimpse(temp)
-fb1<-read.csv(file.choose())
 p=ggplot(temp,aes(x=YEAR,y=JJA))+
   geom_line(colour="black",size=0.9)+
   geom_smooth(colour="red")+
@@ -21,7 +20,7 @@ p=ggplot(temp,aes(x=YEAR,y=JJA))+
           "Summer includes June,July,and August\nData from the Global Historical Climate Network \nRed line is a LOESS smooth")
 print(p)
 
-png(file = "CS02.png", bg = "transparent")
+png(file = "week_02/CS02.png", bg = "transparent")
 print(p)
 dev.off()
 
